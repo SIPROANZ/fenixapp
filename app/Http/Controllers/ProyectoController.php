@@ -9,6 +9,8 @@ use App\Models\Corporacione;
 use App\Models\Actividade;
 use Illuminate\Http\Request;
 
+use PDF;
+
 /**
  * Class ProyectoController
  * @package App\Http\Controllers
@@ -154,6 +156,68 @@ class ProyectoController extends Controller
             ->with('success', 'eliminar');
         }
 
+        
+    }
+
+    public function reportes()
+    {
+      
+        $responsables = Responsable::pluck('nombre', 'id');
+        $corporaciones = Corporacione::pluck('nombre', 'id');
+
+        return view('proyecto.reportes', compact('responsables', 'corporaciones'));
+            
+    }
+
+    public function reporte_pdf(Request $request)
+    {
+        //Fecha
+        $inicio = $request->fecha_inicio;
+        $fin = $request->fecha_fin;
+        //Obtener el nombre de la corporacion
+        $corporacion = Corporacione::find($request->corporacion_id);
+        $nombre_corporacion = '';
+        if($corporacion){
+            $nombre_corporacion = $corporacion->nombre;
+        }
+        //Obtener responsables
+        $responsable = Responsable::find($request->responsable_id);
+        $nombre_responsable = '';
+        if($responsable){
+            $nombre_responsable = $responsable->nombre;
+        }
+
+        $estatus = $request->status;
+        $tipo = $request->tipo;
+      
+        $proyectos = Proyecto::responsables($request->responsable_id)->estatus($estatus)->tipos($tipo)->corporaciones($request->corporacion_id)->fechaInicio($inicio)->fechaFin($fin)->get();
+        $sin_empezar = Proyecto::where('status', 'SIN EMPEZAR')->responsables($request->responsable_id)->estatus($estatus)->tipos($tipo)->corporaciones($request->corporacion_id)->fechaInicio($inicio)->fechaFin($fin)->count();
+        
+        $listo = Proyecto::where('status', 'LISTO')->responsables($request->responsable_id)->estatus($estatus)->tipos($tipo)->corporaciones($request->corporacion_id)->fechaInicio($inicio)->fechaFin($fin)->count();
+        $en_progreso = Proyecto::where('status', 'EN PROGRESO')->responsables($request->responsable_id)->estatus($estatus)->tipos($tipo)->corporaciones($request->corporacion_id)->fechaInicio($inicio)->fechaFin($fin)->count();
+        $archivado = Proyecto::where('status', 'ARCHIVADO')->responsables($request->responsable_id)->estatus($estatus)->tipos($tipo)->corporaciones($request->corporacion_id)->fechaInicio($inicio)->fechaFin($fin)->count();
+        
+
+        $total_proyecto = count($proyectos);
+
+        $datos = [
+            
+            'nombre_corporacion' => $nombre_corporacion,
+            'nombre_responsable' => $nombre_responsable,
+            'estatus' => $estatus,
+            'tipo' => $tipo,
+            'total_proyecto' => $total_proyecto,
+            'sin_empezar' => $sin_empezar,
+            'listo' => $listo,
+            'en_progreso' => $en_progreso,
+            'archivado' => $archivado,
+            'inicio' => $inicio,
+            'fin' => $fin,
+            
+            ]; 
+
+        $pdf = PDF::setPaper('letter', 'landscape')->loadView('proyecto.reportepdf', ['datos'=>$datos, 'proyectos'=>$proyectos]);
+        return $pdf->stream();
         
     }
 }

@@ -30,7 +30,7 @@
         <div class="col-md-4">
         <div class="form-group">
             {{ Form::label('status') }}
-            {{ Form::text('status', $actividade->status, ['class' => 'form-control' . ($errors->has('status') ? ' is-invalid' : ''), 'placeholder' => 'Status']) }}
+            {{ Form::select('status', ['SIN EMPEZAR'  => 'SIN EMPEZAR', 'LISTO'  => 'LISTO', 'EN PROGRESO'  => 'EN PROGRESO', 'ARCHIVADO'  => 'ARCHIVADO'],0, ['class' => 'form-control' . ($errors->has('status') ? ' is-invalid' : ''), 'placeholder' => 'Status']) }}
             {!! $errors->first('status', '<div class="invalid-feedback">:message</div>') !!}
         </div>
     </div>

@@ -10,6 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
+use PDF;
+
+use App\Models\Corporacione;
+
 /**
  * Class ActividadeController
  * @package App\Http\Controllers
@@ -34,7 +38,6 @@ class ActividadeController extends Controller
                          ->orWhere('status', 'like', '%'.request('search').'%')
                          ->orWhere('descripcion', 'like', '%'.request('search').'%')
 
-                         
                          ->orWhereHas('proyecto', function($q){
                           $q->where('nombre', 'like', '%'.request('search').'%');
                           })
@@ -155,5 +158,76 @@ class ActividadeController extends Controller
 
         return redirect()->route('actividades.index')
             ->with('success', 'eliminar');
+    }
+
+    public function reportes()
+    {
+      
+        $responsables = Responsable::pluck('nombre', 'id');
+        $proyectos = Proyecto::pluck('nombre', 'id');
+        $direcciones = Direccione::pluck('descripcion', 'id');
+
+        return view('actividade.reportes', compact('responsables', 'proyectos', 'direcciones'));
+            
+    }
+
+    public function reporte_pdf(Request $request)
+    {
+        //Fecha
+        $inicio = $request->fecha_inicio;
+        $fin = $request->fecha_fin;
+        //Obtener el nombre del proyecto
+        $proyecto = Proyecto::find($request->proyecto_id);
+        $nombre_proyecto = '';
+        if($proyecto){
+            $nombre_proyecto = $proyecto->nombre;
+        }
+        //Obtener responsables
+        $responsable = Responsable::find($request->responsable_id);
+        $nombre_responsable = '';
+        if($responsable){
+            $nombre_responsable = $responsable->nombre;
+        }
+        //Obtener la descripcion de la direccion
+        $direccion = Direccione::find($request->direccion_id);
+        $nombre_direccion ='';
+        if($direccion){
+            $nombre_direccion =$direccion->descripcion;
+        }
+
+        $estatus = $request->status;
+
+
+        
+      
+        $actividades = Actividade::responsables($request->responsable_id)->estatus($estatus)->direcciones($request->direccion_id)->proyectos($request->proyecto_id)->fechaInicio($inicio)->fechaFin($fin)->get();
+        $sin_empezar = Actividade::where('status', 'SIN EMPEZAR')->responsables($request->responsable_id)->estatus($estatus)->direcciones($request->direccion_id)->proyectos($request->proyecto_id)->fechaInicio($inicio)->fechaFin($fin)->count();
+        $listo = Actividade::where('status', 'LISTO')->responsables($request->responsable_id)->estatus($estatus)->direcciones($request->direccion_id)->proyectos($request->proyecto_id)->fechaInicio($inicio)->fechaFin($fin)->count();
+        $en_progreso = Actividade::where('status', 'EN PROGRESO')->responsables($request->responsable_id)->estatus($estatus)->direcciones($request->direccion_id)->proyectos($request->proyecto_id)->fechaInicio($inicio)->fechaFin($fin)->count();
+        $archivado = Actividade::where('status', 'ARCHIVADO')->responsables($request->responsable_id)->estatus($estatus)->direcciones($request->direccion_id)->proyectos($request->proyecto_id)->fechaInicio($inicio)->fechaFin($fin)->count();
+        $costo = $actividades->sum('costo');
+
+        $total_proyecto = count($actividades);
+
+        $datos = [
+            
+            'nombre_proyecto' => $nombre_proyecto,
+            'nombre_responsable' => $nombre_responsable,
+            'estatus' => $estatus,
+            'nombre_direccion' => $nombre_direccion,
+            'total_proyecto' => $total_proyecto,
+            'sin_empezar' => $sin_empezar,
+            'listo' => $listo,
+            'en_progreso' => $en_progreso,
+            'archivado' => $archivado,
+            'inicio' => $inicio,
+            'fin' => $fin,
+            'costo' => $costo,
+            
+            ]; 
+
+        $pdf = PDF::setPaper('letter', 'portrait')->loadView('actividade.reportepdf', ['datos'=>$datos, 'actividades'=>$actividades]);
+        return $pdf->stream();
+        
     }
 }

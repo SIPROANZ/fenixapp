@@ -74,6 +74,42 @@ class Proyecto extends Model
     {
         return $this->hasOne('App\Models\Unidadmedida', 'id', 'unidad_id');
     }
+
+    public function scopeResponsables($query, $responsable) {
+    	if ($responsable) {
+    		return $query->where('responsable_id','like',"$responsable");
+    	}
+    }
+
+    public function scopeEstatus($query, $estatus) {
+    	if ($estatus) {
+    		return $query->where('status','like',"$estatus");
+    	}
+    }
+
+    public function scopeTipos($query, $tipo) {
+    	if ($tipo) {
+    		return $query->where('tipo','like',"$tipo");
+    	}
+    }
+
+    public function scopeCorporaciones($query, $corporacion) {
+    	if ($corporacion) {
+    		return $query->where('corporacion_id','like',"$corporacion");
+    	}
+    }
+
+    public function scopeFechaInicio($query, $inicio) {
+    	if ($inicio) {
+    		return $query->where('created_at','>=',"$inicio");
+    	}
+    }
+
+    public function scopeFechaFin($query, $fin) {
+    	if ($fin) {
+    		return $query->where('created_at','<=',"$fin");
+    	}
+    }
     
 
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Gabinete;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use PDF;
 
 /**
  * Class GabineteController
@@ -117,5 +118,43 @@ class GabineteController extends Controller
 
         return redirect()->route('gabinetes.index')
             ->with('success', 'Gabinete deleted successfully');
+    }
+
+    public function reportes()
+    {
+      
+        
+        return view('gabinete.reportes');
+            
+    }
+
+    public function reporte_pdf(Request $request)
+    {
+        //Fecha
+        $inicio = $request->fecha_inicio;
+        $fin = $request->fecha_fin;
+        
+        //Obtener responsables
+        $nombre_responsable = $request->responsable_id;
+     
+
+      
+        $gabinetes = Gabinete::responsabilidad($nombre_responsable)->fechaInicio($inicio)->fechaFin($fin)->get();
+        
+
+        $total_gabinetes = count($gabinetes);
+
+        $datos = [
+            
+            'nombre_responsable' => $nombre_responsable,
+            'total_gabinetes' => $total_gabinetes,
+            'inicio' => $inicio,
+            'fin' => $fin,
+            
+            ]; 
+
+        $pdf = PDF::setPaper('letter', 'portrait')->loadView('gabinete.reportepdf', ['datos'=>$datos, 'gabinetes'=>$gabinetes]);
+        return $pdf->stream();
+        
     }
 }

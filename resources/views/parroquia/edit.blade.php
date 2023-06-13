@@ -1,8 +1,10 @@
-@extends('layouts.app')
+@extends('adminlte::page')
 
-@section('template_title')
-    {{ __('Update') }} Parroquia
-@endsection
+@section('title', 'Parroquias')
+
+@section('content_header')
+    <h1>Parroquias</h1>
+@stop
 
 @section('content')
     <section class="content container-fluid">
@@ -28,4 +30,16 @@
             </div>
         </div>
     </section>
-@endsection
+    @stop
+
+@section('css')
+    <link rel="stylesheet" href="/css/admin_custom.css">
+@stop
+
+@section('js')
+
+<script src="{{ asset('js/submit.js') }}"></script>
+    <script> console.log('Hi!'); </script>
+
+ 
+@stop

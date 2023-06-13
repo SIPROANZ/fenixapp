@@ -16,6 +16,10 @@
                           
 
                              <div class="float-right">
+
+                             <a href="{{ route('gabinetes.reportes') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                  {{ __('Reporte') }}
+                                </a>
                                 <a href="{{ route('gabinetes.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                                   {{ __('Nuevo Gabinete') }}
                                 </a>

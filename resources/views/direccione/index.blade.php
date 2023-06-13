@@ -48,6 +48,9 @@
                             </span>
 
                              <div class="float-right">
+                             <a href="{{ route('direcciones.reportes') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                  {{ __('Reporte') }}
+                                </a>
                                 <a href="{{ route('direcciones.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                                   {{ __('Nueva Direccion ') }}
                                 </a>

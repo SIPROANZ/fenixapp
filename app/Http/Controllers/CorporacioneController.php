@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Corporacione;
 use App\Models\Gabinete;
 use App\Models\Direccione;
+
+
+use App\Models\Responsable;
+
 use App\Models\Proyecto;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+
+use PDF;
 
 /**
  * Class CorporacioneController
@@ -172,4 +178,60 @@ class CorporacioneController extends Controller
         }
 
     }
+
+    public function reportes()
+    {
+      
+        
+        $gabinetes = Gabinete::pluck('nombre', 'id');
+        $direcciones = Direccione::pluck('descripcion', 'id');
+
+        return view('corporacione.reportes', compact('gabinetes', 'direcciones'));
+            
+    }
+
+    public function reporte_pdf(Request $request)
+    {
+        //Fecha
+        $inicio = $request->fecha_inicio;
+        $fin = $request->fecha_fin;
+      
+        //Obtener responsables
+        $nombre_responsable = $request->responsable_id;
+        //Obtener la descripcion de la direccion
+        $direccion = Direccione::find($request->direccion_id);
+        $nombre_direccion ='';
+        if($direccion){
+            $nombre_direccion =$direccion->descripcion;
+        }
+        //Nombre Gabinete
+        $gabinete = Gabinete::find($request->gabinete_id);
+        $nombre_gabinete = '';
+        if($gabinete){
+            $nombre_gabinete = $gabinete->nombre; 
+        }
+
+      
+        $corporaciones = Corporacione::responsabilidad($nombre_responsable)->direcciones($request->direccion_id)->gabinetes($request->gabinete_id)->fechaInicio($inicio)->fechaFin($fin)->get();
+        
+
+        $total_proyecto = count($corporaciones);
+
+        $datos = [
+            
+            'nombre_gabinete' => $nombre_gabinete,
+            'nombre_responsable' => $nombre_responsable,
+            'nombre_direccion' => $nombre_direccion,
+            'total_proyecto' => $total_proyecto,
+            'inicio' => $inicio,
+            'fin' => $fin,
+            
+            ]; 
+
+        $pdf = PDF::setPaper('letter', 'portrait')->loadView('corporacione.reportepdf', ['datos'=>$datos, 'corporaciones'=>$corporaciones]);
+        return $pdf->stream();
+        
+    }
+
+    
 }

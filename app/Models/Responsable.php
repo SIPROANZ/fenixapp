@@ -68,6 +68,30 @@ class Responsable extends Model
     {
         return $this->hasMany('App\Models\Proyecto', 'responsable_id', 'id');
     }
+
+    public function scopeResponsabilidad($query, $responsable) {
+    	if ($responsable) {
+    		return $query->where('nombre','like',"%$responsable%");
+    	}
+    }
+
+    public function scopeCorporaciones($query, $corporacion) {
+    	if ($corporacion) {
+    		return $query->where('corporacion_id','like',"$corporacion");
+    	}
+    }
+
+    public function scopeFechaInicio($query, $inicio) {
+    	if ($inicio) {
+    		return $query->where('created_at','>=',"$inicio");
+    	}
+    }
+
+    public function scopeFechaFin($query, $fin) {
+    	if ($fin) {
+    		return $query->where('created_at','<=',"$fin");
+    	}
+    }
     
 
 }

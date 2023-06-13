@@ -60,7 +60,7 @@
                         <div class="col-md-6">
                         <div class="form-group">
                             <strong>Costo:</strong>
-                            {{ $actividade->costo }}
+                            {{ number_format($actividade->costo, 2, ',', '.') }}
                         </div>
                     </div>
 

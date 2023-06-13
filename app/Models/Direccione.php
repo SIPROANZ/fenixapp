@@ -64,4 +64,35 @@ class Direccione extends Model
     }
     
 
+    public function scopeDirecciones($query, $descripcion) {
+    	if ($descripcion) {
+    		return $query->where('descripcion','like',"%$descripcion%");
+    	}
+    }
+
+    public function scopeMunicipios($query, $municipios_id) {
+    	if ($municipios_id) {
+    		return $query->where('municipios_id','like',"$municipios_id");
+    	}
+    }
+
+    public function scopeParroquias($query, $parroquias_id) {
+    	if ($parroquias_id) {
+    		return $query->where('tipo','like',"$parroquias_id");
+    	}
+    }
+
+       public function scopeFechaInicio($query, $inicio) {
+    	if ($inicio) {
+    		return $query->where('created_at','>=',"$inicio");
+    	}
+    }
+
+    public function scopeFechaFin($query, $fin) {
+    	if ($fin) {
+    		return $query->where('created_at','<=',"$fin");
+    	}
+    }
+    
+
 }

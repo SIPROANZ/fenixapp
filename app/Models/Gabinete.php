@@ -48,6 +48,24 @@ class Gabinete extends Model
     {
         return $this->hasMany('App\Models\Corporacione', 'gabinete_id', 'id');
     }
+
+    public function scopeResponsabilidad($query, $responsable) {
+    	if ($responsable) {
+    		return $query->where('responsable','like',"%$responsable%");
+    	}
+    }
+
+    public function scopeFechaInicio($query, $inicio) {
+    	if ($inicio) {
+    		return $query->where('created_at','>=',"$inicio");
+    	}
+    }
+
+    public function scopeFechaFin($query, $fin) {
+    	if ($fin) {
+    		return $query->where('created_at','<=',"$fin");
+    	}
+    }
     
 
 }

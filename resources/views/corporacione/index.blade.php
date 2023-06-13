@@ -46,6 +46,10 @@
                            
 
                              <div class="float-right">
+                             <a href="{{ route('corporaciones.reportes') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                  {{ __('Reporte') }}
+                                </a>
+
                                 <a href="{{ route('corporaciones.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                                   {{ __('Nueva Corporacion o Entes') }}
                                 </a>

@@ -6,6 +6,7 @@ use App\Models\Direccione;
 use App\Models\Municipio;
 use App\Models\Parroquia;
 use Illuminate\Http\Request;
+use PDF;
 
 /**
  * Class DireccioneController
@@ -111,5 +112,56 @@ class DireccioneController extends Controller
 
         return redirect()->route('direcciones.index')
             ->with('success', 'Direccion Eliminida Con Exito');
+    }
+
+    public function reportes()
+    {
+      
+        $municipios = Municipio::pluck('nombre', 'id');
+        $parroquias = Parroquia::pluck('nombre', 'id');
+
+        return view('direccione.reportes', compact('municipios', 'parroquias'));
+            
+    }
+
+    public function reporte_pdf(Request $request)
+    {
+        //Fecha
+        $inicio = $request->fecha_inicio;
+        $fin = $request->fecha_fin;
+        //Obtener el nombre de la municipio
+        $municipios = Municipio::find($request->municipio_id);
+        $nombre_municipios = '';
+        if($municipios){
+            $nombre_municipios = $municipios->nombre;
+        }
+        //Obtener responsables
+        $parroquias = Parroquia::find($request->parroquia_id);
+        $nombre_parroquia = '';
+        if($parroquias){
+            $nombre_parroquia = $parroquias->nombre;
+        }
+
+        $direccion = $request->direccion;
+      
+        $direcciones = Direccione::direcciones($request->direccion)->municipios($request->municipio_id)->parroquias($request->parroquia_id)->fechaInicio($inicio)->fechaFin($fin)->get();
+       
+
+        $total_direcciones = count($direcciones);
+
+        $datos = [
+            
+            'nombre_municipio' => $nombre_municipios,
+            'nombre_parroquia' => $nombre_parroquia,
+            'nombre_direccion' => $direccion,
+            'total_direcciones' => $total_direcciones,
+            'inicio' => $inicio,
+            'fin' => $fin,
+            
+            ]; 
+
+        $pdf = PDF::setPaper('letter', 'landscape')->loadView('direccione.reportepdf', ['datos'=>$datos, 'direcciones'=>$direcciones]);
+        return $pdf->stream();
+        
     }
 }

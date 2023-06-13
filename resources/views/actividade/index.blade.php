@@ -19,6 +19,9 @@
                             </span>
 
                              <div class="float-right">
+                             <a href="{{ route('actividades.reportes') }}" class="btn btn-outline-primary btn-sm float-right"  data-placement="left">
+                                  {{ __('Reporte') }}
+                                </a>
                                 <a href="{{ route('actividades.create') }}" class="btn btn-outline-primary btn-sm float-right"  data-placement="left">
                                   {{ __('Crear Nueva Actividad') }}
                                 </a>
@@ -93,7 +96,7 @@
                                             
 											<td>{{ $actividade->nombre }}</td>
                                             <td>{{ $actividade->created_at}}</td>
-											<td>{{ $actividade->costo }}</td>
+											<td>{{ number_format($actividade->costo, 2, ',', '.') }}</td>
 											<td>{{ $actividade->status }}</td>
 											<td>{{ $actividade->cantidad }}</td>
 											<td>{!! $actividade->descripcion !!}</td>
@@ -104,11 +107,11 @@
 											
                                             <td>
                                                 <form action="{{ route('actividades.destroy',$actividade->id) }}" method="POST" class="submit-prevent-form">
-                                                    <a class="btn btn-sm btn-primary btn-block" href="{{ route('actividades.show',$actividade->id) }}"><i class="fas fa-print"></i> {{ __('Mostrar') }}</a>
-                                                    <a class="btn btn-sm btn-success btn-block" href="{{ route('actividades.edit',$actividade->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Editar') }}</a>
+                                                    <a class="btn btn-sm btn-primary btn-block" href="{{ route('actividades.show',$actividade->id) }}"><i class="fas fa-print"></i>{{ __('Mostrar') }}</a>
+                                                    <a class="btn btn-sm btn-success btn-block" href="{{ route('actividades.edit',$actividade->id) }}"><i class="fa fa-fw fa-edit"></i>{{ __('Editar') }}</a>
                                                     @csrf
                                                     @method('DELETE')
-                                                  <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> {{ __('Eliminar') }}</button>
+                                                  <button type="submit" class="btn btn-danger btn-sm submit-prevent-button"><i class="fa fa-fw fa-trash"></i>{{ __('Eliminar') }}</button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -126,13 +129,17 @@
     @stop
 
     @section('css')
-        <link rel="stylesheet" href="/css/admin_custom.css">
+
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous"/>
+        <link rel="stylesheet" href="{{ asset('css/submit.css') }}">
     @stop
     
     @section('js')
 
-        <script src="{{ asset('js/submit.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('js/alertaeliminar.js') }}"></script>
+        
+
+       
 
         @if($eliminar)
     <script type="text/javascript" src="{{ asset('js/eliminar.js') }}"></script>
@@ -144,6 +151,9 @@
     <script type="text/javascript" src="{{ asset('js/error.js') }}"></script>
     @endif
 
-        <script> console.log('Hi!'); </script>
+
+    <script src="{{ asset('js/submit.js') }}"></script>
+        <script src="{{ asset('js/alerta_eliminar.js') }}"></script>
+        
 
     @stop

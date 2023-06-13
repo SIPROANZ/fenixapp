@@ -2,27 +2,16 @@
 
 @section('title', 'Proyecto')
 
+@section('content_header')
+    <h1>Proyectos</h1>
+@stop
+
 
 @section('content')
     <div class="container-fluid">
 
          <!-- /.col -->
-         <div class="row">
-         <section class="content">
-            <div class="container-fluid">
-         <div class="col-md-12 col-sm-6 col-12">
-            <div class="info-box">
-              <span class="info-box-icon bg-blue"><i class="far fa-copy"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Proyectos </span>
-                <span class="info-box-number"> </span>
-              </div>
-              
-            </div>
-        </div>
-        </div>
-        </div>
+        
 
         <div class="row">
             <div class="col-sm-12">
@@ -35,6 +24,9 @@
                             </span>
 
                              <div class="float-right">
+                             <a href="{{ route('proyectos.reportes') }}" class="btn btn-outline-primary btn-sm float-right"  data-placement="left">
+                                  {{ __('Reporte') }}
+                                </a>
                                 <a href="{{ route('proyectos.create') }}" class="btn btn-outline-primary btn-sm float-right"  data-placement="left">
                                   {{ __('Crear Nuevo Proyecto') }}
                                 </a>
@@ -119,11 +111,11 @@
 
                                             <td>
                                                       <form action="{{ route('proyectos.destroy',$proyecto->id) }}" method="POST" class="submit-prevent-form">
-                                               <a class="btn btn-sm btn-primary btn-block" href="{{ route('proyectos.show',$proyecto->id) }}"><i class="fas fa-print"></i> {{ __('Detalles') }}</a>
-                                                    <a class="btn btn-sm btn-success btn-block" href="{{ route('proyectos.edit',$proyecto->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Editar') }}</a>
+                                               <a class="btn btn-sm btn-primary btn-block" href="{{ route('proyectos.show',$proyecto->id) }}"><i class="fas fa-print"></i>{{ __('Detalles') }}</a>
+                                                    <a class="btn btn-sm btn-success btn-block" href="{{ route('proyectos.edit',$proyecto->id) }}"><i class="fa fa-fw fa-edit"></i>{{ __('Editar') }}</a>
                                                     @csrf
                                                     @method('DELETE')
-                                                  <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> {{ __('Eliminar') }}</button>
+                                                  <button type="submit" class="btn btn-danger btn-sm submit-prevent-button"><i class="fa fa-fw fa-trash"></i>{{ __('Eliminar') }}</button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -150,7 +142,7 @@
     @section('js')
 
     <script src="{{ asset('js/submit.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/alertaeliminar.js') }}"></script>
+    <script src="{{ asset('js/alerta_eliminar.js') }}"></script>
 
 
     @if($eliminar)
@@ -164,6 +156,6 @@
     @endif
 
 
-    <script> console.log('Hi!'); </script>
+    
     @stop
     

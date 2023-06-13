@@ -9,6 +9,8 @@ use App\Models\Corporacione;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+use PDF;
+
 /**
  * Class ResponsableController
  * @package App\Http\Controllers
@@ -120,4 +122,48 @@ class ResponsableController extends Controller
         return redirect()->route('responsables.index')
             ->with('success', 'Responsable deleted successfully');
     }
+
+    public function reportes()
+    {
+      
+        $corporaciones = Corporacione::pluck('nombre', 'id');
+
+        return view('responsable.reportes', compact('corporaciones'));
+            
+    }
+
+    public function reporte_pdf(Request $request)
+    {
+        //Fecha
+        $inicio = $request->fecha_inicio;
+        $fin = $request->fecha_fin;
+       
+        //Obtener responsables
+        $nombre_responsable = $request->responsable_id;
+        //Obtener el nombre de la corporacion
+        $corporacion = Corporacione::find($request->corporacion_id);
+        $nombre_corporacion = '';
+        if($corporacion){
+            $nombre_corporacion = $corporacion->nombre;
+        }
+
+        $responsables = Responsable::responsabilidad($nombre_responsable)->corporaciones($request->corporacion_id)->fechaInicio($inicio)->fechaFin($fin)->get();
+        
+        $total_responsables = count($responsables);
+
+        $datos = [
+            
+            'nombre_corporacion' => $nombre_corporacion,
+            'nombre_responsable' => $nombre_responsable,
+            'total_responsables' => $total_responsables,
+            'inicio' => $inicio,
+            'fin' => $fin,
+            
+            ]; 
+
+        $pdf = PDF::setPaper('letter', 'portrait')->loadView('responsable.reportepdf', ['datos'=>$datos, 'responsables'=>$responsables]);
+        return $pdf->stream();
+        
+    }
+
 }

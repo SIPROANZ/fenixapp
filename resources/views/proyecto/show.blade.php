@@ -2,7 +2,9 @@
 
 @section('title', 'Detalles del Proyecto')
 
-
+@section('content_header')
+    <h1>Proyecto</h1>
+@stop
 
 @section('content')
     <section class="content container-fluid">
@@ -18,9 +20,7 @@
                         <div class="float-right">
                             <a class="btn btn-primary" href="{{ route('proyectos.index') }}"> <i class="fas fa-reply-all"></i>{{ __('Regresar') }}</a>
                         </div>
-                        <div class="float-right">
-                            <a class="btn btn-primary" href="{{ url('#') }}"> {{ __('Imprimir') }}</a>
-                        </div>
+                        
                     </div>
 
                     <div class="card-body">

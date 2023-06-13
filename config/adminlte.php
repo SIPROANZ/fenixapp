@@ -308,7 +308,7 @@ return [
         ],
        
             
-        ['header' => 'GESTION DE PROYECTOS',
+        ['header' => 'PANEL GESTION DE PROYECTOS',
 
     
         ],

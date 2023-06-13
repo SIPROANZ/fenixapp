@@ -122,6 +122,7 @@
               </div>
               <div class="icon">
                 <i class="ion ion-pie-graph"></i>
+                
               </div>
             </div>
           </div>
@@ -137,7 +138,7 @@
   <div class="col-12 col-md-8">
 <div class="card">
   <div class="card-header border-transparent">
-  <h3 class="card-title">Proyectos de mayor impacto economico</h3>
+  <h3 class="card-title">Proyectos de Mayor Impacto Economico</h3>
   <div class="card-tools">
   <button type="button" class="btn btn-tool" data-card-widget="collapse">
   <i class="fas fa-minus"></i>

@@ -81,6 +81,38 @@ class Corporacione extends Model
     {
         return $this->hasMany('App\Models\Responsable', 'corporacion_id', 'id');
     }
+
+    public function scopeResponsabilidad($query, $responsable) {
+    	if ($responsable) {
+    		return $query->where('responsable','like',"%$responsable%");
+    	}
+    }
+
+   
+
+    public function scopeDirecciones($query, $direccion) {
+    	if ($direccion) {
+    		return $query->where('direcion_id','like',"$direccion");
+    	}
+    }
+
+    public function scopeGabinetes($query, $gabinete) {
+    	if ($gabinete) {
+    		return $query->where('gabinete_id','like',"$gabinete");
+    	}
+    }
+
+    public function scopeFechaInicio($query, $inicio) {
+    	if ($inicio) {
+    		return $query->where('created_at','>=',"$inicio");
+    	}
+    }
+
+    public function scopeFechaFin($query, $fin) {
+    	if ($fin) {
+    		return $query->where('created_at','<=',"$fin");
+    	}
+    }
     
 
 }

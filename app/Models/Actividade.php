@@ -72,6 +72,42 @@ class Actividade extends Model
     {
         return $this->hasOne('App\Models\Responsable', 'id', 'responsable_id');
     }
+
+     public function scopeResponsables($query, $responsable) {
+    	if ($responsable) {
+    		return $query->where('responsable_id','like',"$responsable");
+    	}
+    }
+
+    public function scopeEstatus($query, $estatus) {
+    	if ($estatus) {
+    		return $query->where('status','like',"$estatus");
+    	}
+    }
+
+    public function scopeDirecciones($query, $direccion) {
+    	if ($direccion) {
+    		return $query->where('direcion_id','like',"$direccion");
+    	}
+    }
+
+    public function scopeProyectos($query, $proyecto) {
+    	if ($proyecto) {
+    		return $query->where('proyecto_id','like',"$proyecto");
+    	}
+    }
+
+    public function scopeFechaInicio($query, $inicio) {
+    	if ($inicio) {
+    		return $query->where('created_at','>=',"$inicio");
+    	}
+    }
+
+    public function scopeFechaFin($query, $fin) {
+    	if ($fin) {
+    		return $query->where('created_at','<=',"$fin");
+    	}
+    }
     
 
 }
